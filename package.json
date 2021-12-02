@@ -7,6 +7,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start -p $PORT",
+    "ngrok": "ngrok http 3000",
     "test": "jest",
     "lint": "eslint . --ext .ts,.tsx,.js",
     "db:setup": "node scripts/db.js"
@@ -25,6 +26,7 @@
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "next": "^11.1.1",
+    "ngrok": "^4.2.2",
     "node-bigcommerce": "github:bigcommerce/node-bigcommerce",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
