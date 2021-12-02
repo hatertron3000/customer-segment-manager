@@ -75,3 +75,19 @@ export const useOrder = (orderId: number) => {
         error,
     };
 }
+
+export function useSegments(query?: QueryParams) {
+    const { context } = useSession();
+    const params = new URLSearchParams({ ...query, context }).toString();
+
+    // Use an array to send multiple arguments to fetcher
+    const { data, error, mutate: mutateSegments } = useSWR(context ? ['/api/segments', params] : null, fetcher);
+    console.log(data)
+    return {
+        data: data?.data,
+        meta: data?.meta,
+        isLoading: !data && !error,
+        error,
+        mutateSegments,
+    };
+}

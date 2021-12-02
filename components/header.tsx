@@ -6,11 +6,13 @@ import InnerHeader from './innerHeader';
 export const TabIds = {
     HOME: 'home',
     PRODUCTS: 'products',
+    SEGMENTS: 'segments'
 };
 
 export const TabRoutes = {
     [TabIds.HOME]: '/',
     [TabIds.PRODUCTS]: '/products',
+    [TabIds.SEGMENTS]: '/segments',
 };
 
 const HeaderlessRoutes = [
@@ -54,11 +56,13 @@ const Header = () => {
     useEffect(() => {
         // Prefetch products page to reduce latency (doesn't prefetch in dev)
         router.prefetch('/products');
+        router.prefetch('/segments')
     });
 
     const items = [
         { id: TabIds.HOME, title: 'Home' },
         { id: TabIds.PRODUCTS, title: 'Products' },
+        { id: TabIds.SEGMENTS, title: 'Segments' },
     ];
 
     const handleTabClick = (tabId: string) => {
