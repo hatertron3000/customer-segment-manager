@@ -13,6 +13,11 @@ export interface TableItem {
     stock: number;
 }
 
+export interface SegmentTableItem {
+    id: string;
+    name: string
+}
+
 export interface ListItem extends FormData {
     id: number;
 }
