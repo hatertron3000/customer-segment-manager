@@ -38,7 +38,6 @@ const CreateSegment = ({
             if(res.status != 200) {
                 throw new Error(`Error creating segment${data.message ? `: ${data.message}` : ''}`)
             }
-            console.log(data)
             const alert = {
                 header: 'Success',
                 autoDismiss: true,

@@ -29,10 +29,10 @@ const Segments = () => {
     const [segmentToDelete, setSegmentToDelete]: [Segment | null, Function] = useState(null)
     const router = useRouter()
     const {
-        data,
-        meta,
-        isLoading,
-        error,
+        segments,
+        segmentMeta,
+        segmentsLoading,
+        segmentError,
         mutateSegments,
     } = useSegments()
     const encodedContext = useSession()?.context;
@@ -77,7 +77,7 @@ const Segments = () => {
         setDeleting(false)
     }
 
-    const segmentItems: SegmentTableItem[] = data?.map(({id, name}: Segment) => (
+    const segmentItems: SegmentTableItem[] = segments?.map(({id, name}: Segment) => (
         {
             id,
             name

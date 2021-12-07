@@ -4,10 +4,18 @@ import type { AppProps } from 'next/app';
 import { ThemeProvider } from 'styled-components';
 import Header from '../components/header';
 import SessionProvider from '../context/session';
+import Head from 'next/head'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
     return (
         <ThemeProvider theme={defaultTheme}>
+            <Head>
+                {
+                    process.env.NODE_ENV === 'development' 
+                    ? <script src="http://localhost:8097"></script>
+                    : null
+                 }
+            </Head>
             <GlobalStyles />
             <Box
                 marginHorizontal={{ mobile: 'none', tablet: 'xxxLarge' }}
