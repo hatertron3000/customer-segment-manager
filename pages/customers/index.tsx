@@ -1,6 +1,6 @@
 import {
         Panel,
-        H1,
+        H2,
         Form,
         Input,
         FormGroup,
@@ -11,8 +11,6 @@ import {
         AlertProps,
         createAlertsManager,
         Table,
-        Collapse,
-        Text,
         Link as StyledLink
     } from "@bigcommerce/big-design"
 import Link from 'next/link'
@@ -106,7 +104,7 @@ const Customers = () => {
 
     return <Panel>
         <AlertsManager manager={alertsManager} />
-        <H1>Customers</H1>
+        <H2>Customers</H2>
         <Form>
             <FormGroup>
                 <Input 
