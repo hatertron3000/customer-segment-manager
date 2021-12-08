@@ -62,10 +62,7 @@ export default async function segments(req: NextApiRequest, res: NextApiResponse
                     }
                 })
                 res.status(200).json(data)
-            } catch (error) {
-                console.error(error)
-                const { message, response } = error;
-                res.status(response?.status || 500).json({ message });
+                break;
             }
             break;
         }
