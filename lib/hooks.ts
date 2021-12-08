@@ -75,3 +75,34 @@ export const useOrder = (orderId: number) => {
         error,
     };
 }
+
+export const useCustomer = (customerId: string) => {
+    const { context } = useSession();
+    const params = new URLSearchParams({ context, "id:in": customerId}).toString();
+    const shouldFetch = context && customerId !== undefined;
+
+    // Conditionally fetch orderId is defined
+    const { data, error, mutate: mutateCustomer } = useSWR(shouldFetch ? [`/api/customers`, params] : null, fetcher);
+    return {
+        customer: data?.data[0],
+        customerMeta: data?.meta,
+        customerLoading: !data && !error,
+        customerError: error,
+        mutateCustomer
+    };
+}
+
+export function useSegments(query?: QueryParams) {
+    const { context } = useSession();
+    const params = new URLSearchParams({ ...query, context }).toString();
+
+    // Use an array to send multiple arguments to fetcher
+    const { data, error, mutate: mutateSegments } = useSWR(context ? ['/api/segments', params] : null, fetcher);
+    return {
+        segments: data?.data,
+        segmentMeta: data?.meta,
+        segmentsLoading: !data && !error,
+        segmentError: error,
+        mutateSegments,
+    };
+}

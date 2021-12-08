@@ -13,6 +13,20 @@ export interface TableItem {
     stock: number;
 }
 
+export interface CustomerItem {
+    id: number;
+    email: string;
+    first_name: string;
+    last_name: string;
+    shopper_profile_id?: string;
+    segment_ids?: string[];
+}
+
+export interface SegmentTableItem {
+    id: string;
+    name: string
+}
+
 export interface ListItem extends FormData {
     id: number;
 }
