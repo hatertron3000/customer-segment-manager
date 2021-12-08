@@ -3,23 +3,17 @@ import {
     AlertsManager,
     Box,
     createAlertsManager,
-    Flex,
-    FlexItem,
     H2,
     Panel,
     Link as StyledLink,
-    Switch,
-    Text,
 } from '@bigcommerce/big-design'
 import { ArrowBackIcon } from '@bigcommerce/big-design-icons'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
 import Loading from '@components/loading'
+import SegmentEditor from '@components/segmentEditor'
 import { useSegments, } from '@lib/hooks'
 import { useSession } from 'context/session'
-import SegmentEditor from '@components/segmentEditor'
-
 
 const alertsManager = createAlertsManager()
 

@@ -1,6 +1,4 @@
-import { AlertProps, AlertsManager, Box, Button, createAlertsManager, Form, FormGroup, H2, Input, Textarea } from "@bigcommerce/big-design"
-import { AddIcon } from '@bigcommerce/big-design-icons'
-import { useState } from "react"
+import { AlertProps, AlertsManager, Box, createAlertsManager, H2 } from "@bigcommerce/big-design"
 import SegmentEditor from './segmentEditor'
 
 const alertsManager = createAlertsManager()
