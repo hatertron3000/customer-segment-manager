@@ -1,6 +1,7 @@
 import { AlertProps, AlertsManager, Box, Button, createAlertsManager, Form, FormGroup, H2, Input, Textarea } from "@bigcommerce/big-design"
 import { AddIcon } from '@bigcommerce/big-design-icons'
 import { useState } from "react"
+import SegmentEditor from './segmentEditor'
 
 const alertsManager = createAlertsManager()
 
@@ -10,13 +11,8 @@ const CreateSegment = ({
     mutateSegments,
     addAlert
 }) => {
-    const [name, setName] = useState('')
-    const [description, setDescription] = useState('')
-    const [loading, setLoading] = useState(false)
 
-    const handleClick = async (e) => {
-        e.preventDefault()
-        setLoading(true)
+    const handleClick = async ({ name, description }) => {
         try {
             const body = JSON.stringify([
                 {
@@ -24,18 +20,18 @@ const CreateSegment = ({
                     description,
                 }
             ]),
-            options = {
-                method: 'POST', 
-                body,
-                headers: {
-                    "content-type": "application/json"
-                }
-            },
-            url = `/api/segments?context=${encodedContext}`
+                options = {
+                    method: 'POST',
+                    body,
+                    headers: {
+                        "content-type": "application/json"
+                    }
+                },
+                url = `/api/segments?context=${encodedContext}`
 
             const res = await fetch(url, options)
             const data = await res.json()
-            if(res.status != 200) {
+            if (res.status != 200) {
                 throw new Error(`Error creating segment${data.message ? `: ${data.message}` : ''}`)
             }
             const alert = {
@@ -65,49 +61,18 @@ const CreateSegment = ({
                 onClose: () => null,
             } as AlertProps
             addAlert(alert)
-            setLoading(false)
         }
     }
 
     return <Box marginTop="large">
         <AlertsManager manager={alertsManager} />
         <H2>Create a Segment</H2>
-        <Form>
-            <FormGroup>
-                <Input 
-                    label="Segment Name"
-                    placeholder="My Segment"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    disabled={loading}
-                    required
-                />
-            </FormGroup>
-            <FormGroup>
-                <Textarea 
-                    label="Description"
-                    placeholder="A segment for super special customers"
-                    resize={true}
-                    rows={4}
-                    value={description}
-                    disabled={loading}
-                    onChange={e => setDescription(e.target.value)}
-                />
-            </FormGroup>
-            <Button
-                iconLeft={<AddIcon /> }
-                isLoading={loading}
-                onClick={handleClick}
-            >
-                    Create Segment
-            </Button>
-            <Button
-                variant="secondary"
-                onClick={onCancel}
-            >
-                Cancel
-            </Button>
-        </Form>
+        <SegmentEditor
+            onSave={handleClick}
+            onCancel={onCancel}
+            saveText="Save Segment"
+            segment={{ name: "", description: "" }}
+        />
     </Box>
 }
 

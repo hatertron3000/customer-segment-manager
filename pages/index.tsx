@@ -1,4 +1,4 @@
-import { 
+import {
     AlertProps,
     AlertsManager,
     Button,
@@ -12,7 +12,7 @@ import {
     Table,
     Text,
 } from "@bigcommerce/big-design"
-import { AddIcon, DeleteIcon, MoreHorizIcon } from '@bigcommerce/big-design-icons'
+import { AddIcon, DeleteIcon, EditIcon, MoreHorizIcon } from '@bigcommerce/big-design-icons'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactElement, useState } from "react"
@@ -43,10 +43,14 @@ const Segments = () => {
     const handleDeleteSegment = async (): Promise<void> => {
         setDeleting(true)
         try {
-            const url = `/api/segments?id=${segmentToDelete.id}&context=${encodedContext}`
-            await fetch(url, {
+            const url = `/api/segments?id:in=${segmentToDelete.id}&context=${encodedContext}`
+            const res = await fetch(url, {
                 method: 'DELETE'
             })
+            const { errors } = await res.json()
+            if (errors?.length)
+                throw new Error(errors.toString())
+
             const alert = {
                 header: 'Success',
                 autoDismiss: true,
@@ -61,7 +65,7 @@ const Segments = () => {
             alertsManager.add(alert)
             setSegmentToDelete(null)
             mutateSegments()
-        } catch(err) {
+        } catch (err) {
             console.error(err)
             const alert = {
                 header: 'Error deleting segment',
@@ -80,7 +84,7 @@ const Segments = () => {
         setDeleting(false)
     }
 
-    const segmentItems: SegmentTableItem[] = segments?.map(({id, name}: Segment) => (
+    const segmentItems: SegmentTableItem[] = segments?.map(({ id, name }: Segment) => (
         {
             id,
             name
@@ -95,15 +99,15 @@ const Segments = () => {
 
     const renderAction = (id: string, name: string): ReactElement => (
         <Dropdown
-            items={[ 
-                { content: 'Edit Shopper Profiles', onItemClick: () => router.push(`/segments/${id}/shopper-profiles`), hash: 'edit' },
-                { content: 'Delete Segment', onItemClick: () => setSegmentToDelete({id, name} as Segment), hash: 'delete', icon: <DeleteIcon />}
+            items={[
+                { content: 'Edit Segment', onItemClick: () => router.push(`/segments/${id}`), hash: 'edit', icon: <EditIcon /> },
+                { content: 'Delete Segment', onItemClick: () => setSegmentToDelete({ id, name } as Segment), hash: 'delete', icon: <DeleteIcon /> }
             ]}
             toggle={<Button iconOnly={<MoreHorizIcon color="secondary60" />} variant="subtle" />}
         />
     )
 
-    return segmentItems 
+    return segmentItems
         ? <Panel>
             <H2>Segments</H2>
             <AlertsManager manager={alertsManager} />
@@ -116,20 +120,20 @@ const Segments = () => {
                 itemName="Segments"
                 stickyHeader
             />
-            {adding 
+            {adding
                 ? <CreateSegment
-                    encodedContext={encodedContext} 
+                    encodedContext={encodedContext}
                     onCancel={() => setAdding(false)}
                     mutateSegments={mutateSegments}
                     addAlert={alertsManager.add}
-                    />
+                />
                 : <Button marginTop="medium" iconLeft={<AddIcon />} onClick={() => setAdding(true)}>Add New Segment</Button>
             }
             <Modal
                 isOpen={segmentToDelete ? true : false}
                 actions={[
                     { text: "Cancel", variant: "subtle", onClick: () => setSegmentToDelete(null) },
-                    { text: "Delete Segment", actionType: "destructive", iconLeft: <DeleteIcon />, onClick: () => handleDeleteSegment(), isLoading: deleting}
+                    { text: "Delete Segment", actionType: "destructive", iconLeft: <DeleteIcon />, onClick: () => handleDeleteSegment(), isLoading: deleting }
                 ]}
                 backdrop={true}
                 header={`Delete ${segmentToDelete?.name}`}
@@ -139,7 +143,7 @@ const Segments = () => {
                     Are you sure that you want to delete {segmentToDelete?.name}?
                 </Text>
             </Modal>
-          </Panel>
+        </Panel>
         : <Loading />
 }
 
