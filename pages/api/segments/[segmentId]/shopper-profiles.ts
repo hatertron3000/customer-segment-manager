@@ -52,7 +52,7 @@ export default async function shopperProfiles(req: NextApiRequest, res: NextApiR
             const { accessToken, storeHash } = await getSession(req);
             const { data } =  await axios({
                 method: 'DELETE',
-                url: `https://api.bigcommerce.com/stores/${storeHash}/v3/segments?id:in=${ids}`,
+                url: `https://api.bigcommerce.com/stores/${storeHash}/v3/segments/${segmentId}/shopper-profiles?id:in=${ids}`,
                 headers: {
                     'X-Auth-Token': accessToken,
                     'Content-Type': "application/json"

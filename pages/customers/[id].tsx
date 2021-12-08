@@ -16,6 +16,7 @@ import { ArrowBackIcon } from '@bigcommerce/big-design-icons'
 import Loading from '@components/loading'
 import Link from 'next/link'
 import { useSession } from 'context/session'
+import { useState } from 'react'
 
 const alertsManager = createAlertsManager()
 
@@ -38,6 +39,91 @@ const CustomerEditor = () => {
         customerError,
         mutateCustomer,
     } = useCustomer(id)
+
+    const [disabled, setDisabled] = useState(false)
+
+    
+    
+    const addToSegment = async (segmentId) => {
+        console.log('adding')
+        try {
+            const url = `/api/segments/${segmentId}/shopper-profiles?context=${encodedContext}`
+            const options = {
+                method: 'POST',
+                body: JSON.stringify([ customer.shopper_profile_id ])
+            }
+            const res = await fetch(url, options)
+            const { data } = await res.json()
+            if(!data || data.length < 1) {
+                throw new Error('Unable to add the shopper profile to the segment')
+            }
+            const alert = {
+                type: 'success',
+                header: 'Added to segment',
+                messages: [
+                    {
+                        text: `Added to ${segments.find(segment => segment.id === segmentId).name}`
+                    }
+                ],
+                autoDismiss: true
+            } as AlertProps
+            alertsManager.add(alert)
+            mutateCustomer()
+        } catch (err) {
+            console.error(err)
+            const alert = {
+                type: 'error',
+                header: 'Error adding customer to segment',
+                messages: [
+                    {
+                        text: err.message
+                    }
+                ]
+            } as AlertProps
+            alertsManager.add(alert)
+            mutateCustomer()
+        }
+    }
+
+    const removeFromSegment = async (segmentId) => {
+        console.log('removing')
+        try {
+            const url = `/api/segments/${segmentId}/shopper-profiles?context=${encodedContext}&ids=${customer.shopper_profile_id}`
+            const options = {
+                method: 'DELETE',
+            }
+            const res = await fetch(url, options)
+            const { meta } = await res.json()
+            if(!meta || meta.success < 1) {
+                throw new Error('Unable to remove the shopper profile from the segment')
+            }
+            const alert = {
+                type: 'success',
+                header: 'Removed from segment',
+                messages: [
+                    {
+                        text: `Removed the shopper profile from ${segments.find(segment => segment.id === segmentId).name}`
+                    }
+                ],
+                autoDismiss: true
+            } as AlertProps
+            alertsManager.add(alert)
+            mutateCustomer()
+        } catch (err) {
+            console.error(err)
+            const alert = {
+                type: 'error',
+                header: 'Error removing customer from segment',
+                messages: [
+                    {
+                        text: err.message
+                    }
+                ]
+            } as AlertProps
+            alertsManager.add(alert)
+            mutateCustomer()
+        }
+    }
 
     const provisionShopperProfile = async () => {
         const url = `/api/shopper-profiles?context=${encodedContext}`
@@ -98,8 +184,16 @@ const CustomerEditor = () => {
             {segments.map(segment => (<Flex marginBottom="medium">
                 <FlexItem>
                     <Switch 
+                        disabled={disabled}
                         checked={customer.segment_ids?.includes(segment.id)}
-                        onChange={() => null}
+                        onChange={async (e) => {
+                            setDisabled(true)
+                            if (!e.target.checked)
+                                await removeFromSegment(segment.id)
+                            else
+                                await addToSegment(segment.id)
+                            setDisabled(false)
+                        }}
                     />
                 </FlexItem>
                 <FlexItem marginLeft="large">
