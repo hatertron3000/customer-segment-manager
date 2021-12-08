@@ -1,39 +1,41 @@
-import { AlertsManager,
-    createAlertsManager,
+import { 
     AlertProps,
+    AlertsManager,
     Button,
+    createAlertsManager,
     Dropdown,
+    H2,
+    H3,
+    Modal,
     Panel,
     Link as StyledLink,
     Table,
-    Modal,
-    H3,
-    Text, 
-    H2} from "@bigcommerce/big-design"
+    Text,
+} from "@bigcommerce/big-design"
+import { AddIcon, DeleteIcon, MoreHorizIcon } from '@bigcommerce/big-design-icons'
 import Link from 'next/link'
-import { useState } from "react"
-import CreateSegment from '../components/createSegment'
-import { useSession } from "context/session"
-import { MoreHorizIcon, AddIcon, DeleteIcon } from '@bigcommerce/big-design-icons'
+import { useRouter } from 'next/router'
+import { ReactElement, useState } from "react"
 import Loading from "@components/loading"
 import { useSegments } from "@lib/hooks"
-import { ReactElement } from "react"
-import { Segment } from "types/segment"
-import { useRouter } from 'next/router'
+import { useSession } from "context/session"
 import { SegmentTableItem } from "types/data"
+import { Segment } from "types/segment"
+import CreateSegment from '../components/createSegment'
+
 
 const alertsManager = createAlertsManager()
 
 const Segments = () => {
     const [adding, setAdding] = useState(false)
     const [deleting, setDeleting] = useState(false)
-    const [segmentToDelete, setSegmentToDelete]: [Segment | null, Function] = useState(null)
+    const [segmentToDelete, setSegmentToDelete] = useState(null)
     const router = useRouter()
     const {
         segments,
-        segmentMeta,
-        segmentsLoading,
-        segmentError,
+        // segmentMeta,
+        // segmentsLoading,
+        // segmentError,
         mutateSegments,
     } = useSegments()
     const encodedContext = useSession()?.context;

@@ -1,22 +1,22 @@
 import {
-        Panel,
-        H2,
-        Form,
-        Input,
-        FormGroup,
-        Button,
-        Box,
-        H3,
-        AlertsManager,
-        AlertProps,
-        createAlertsManager,
-        Table,
-        Link as StyledLink
-    } from "@bigcommerce/big-design"
+    AlertProps,
+    AlertsManager,
+    Box,    
+    Button,
+    createAlertsManager,
+    Form,
+    FormGroup,
+    H2,
+    H3,
+    Input,
+    Panel,
+    Link as StyledLink,
+    Table,
+} from "@bigcommerce/big-design"
+import { EditIcon, SearchIcon } from "@bigcommerce/big-design-icons"
 import Link from 'next/link'
-import { CustomerItem } from "@types"
-import { SearchIcon, EditIcon } from "@bigcommerce/big-design-icons"
 import { useState } from "react"
+import { CustomerItem } from "@types"
 import { useSession } from "context/session"
 
 const alertsManager = createAlertsManager()
@@ -87,7 +87,7 @@ const Customers = () => {
         </Link>
     }
 
-    const SearchResults = ({ customers, setCustomers }) => (
+    const SearchResults = () => (
         <Box>
             <H3>Search Results</H3>
             <Table
@@ -127,7 +127,7 @@ const Customers = () => {
             </Button>
         </Form>
         {customers?.length 
-            ? <SearchResults customers={customers} setCustomers={setCustomers} />
+            ? <SearchResults />
             : null
             }
     </Panel>
