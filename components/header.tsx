@@ -12,10 +12,6 @@ export const TabRoutes = {
     [TabIds.CUSTOMERS]: '/customers',
 };
 
-const HeaderTypes = {
-    GLOBAL: 'global'
-};
-
 const Header = () => {
     const [activeTab, setActiveTab] = useState<string>('');
     const router = useRouter();

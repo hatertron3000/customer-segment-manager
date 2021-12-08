@@ -1,10 +1,10 @@
 import { Box, GlobalStyles, H1 } from '@bigcommerce/big-design';
 import { theme as defaultTheme } from '@bigcommerce/big-design-theme';
 import type { AppProps } from 'next/app';
+import Head from 'next/head'
 import { ThemeProvider } from 'styled-components';
 import Header from '../components/header';
 import SessionProvider from '../context/session';
-import Head from 'next/head'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
     return (

@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { NextApiRequest, NextApiResponse } from 'next';
 import { bigcommerceClient, getSession } from '../../../../lib/auth';
 
@@ -7,7 +8,6 @@ import { bigcommerceClient, getSession } from '../../../../lib/auth';
         So, the batch APIs can't use that client until it's patched.
         I don't want to monkey patch it here, so I'm going to use axios instead
     */
-const axios = require('axios').default
 
 export default async function shopperProfiles(req: NextApiRequest, res: NextApiResponse) {
     const {
@@ -17,49 +17,52 @@ export default async function shopperProfiles(req: NextApiRequest, res: NextApiR
     } = req;
 
     switch (method) {
-        case 'GET':
-            try {
-                const { accessToken, storeHash } = await getSession(req);
-                const bigcommerce = bigcommerceClient(accessToken, storeHash);
+        case 'GET': {
+                try {
+                    const { accessToken, storeHash } = await getSession(req);
+                    const bigcommerce = bigcommerceClient(accessToken, storeHash);
 
-                const bcRes = await bigcommerce.get(`/segments/${segmentId}/shopper-profiles?limit=${limit ? limit : '50'}${page ? `&page=${page}` : ''}`);
-                res.status(200).json(bcRes);
-            } catch (error) {
-                const { message, response } = error;
-                res.status(response?.status || 500).json({ message });
+                    const bcRes = await bigcommerce.get(`/segments/${segmentId}/shopper-profiles?limit=${limit ? limit : '50'}${page ? `&page=${page}` : ''}`);
+                    res.status(200).json(bcRes);
+                } catch (error) {
+                    const { message, response } = error;
+                    res.status(response?.status || 500).json({ message });
+                }
+                break;
             }
-            break;
-        case 'POST':
-            try {
+        case 'POST': {
+                try {
+                    const { accessToken, storeHash } = await getSession(req);
+                    const { data } =  await axios({
+                        method: 'POST',
+                        url: `https://api.bigcommerce.com/stores/${storeHash}/v3/segments/${segmentId}/shopper-profiles`,
+                        data: body,
+                        headers: {
+                            'X-Auth-Token': accessToken,
+                            'Content-Type': "application/json"
+                        }
+                    })
+                    res.status(200).json(data)
+                } catch (error) {
+                    console.error(error)
+                    const { message, response } = error;
+                    res.status(response?.status || 500).json({ message });
+                }
+                break;
+            }
+        case 'DELETE': {
                 const { accessToken, storeHash } = await getSession(req);
                 const { data } =  await axios({
-                    method: 'POST',
-                    url: `https://api.bigcommerce.com/stores/${storeHash}/v3/segments/${segmentId}/shopper-profiles`,
-                    data: body,
+                    method: 'DELETE',
+                    url: `https://api.bigcommerce.com/stores/${storeHash}/v3/segments/${segmentId}/shopper-profiles?id:in=${ids}`,
                     headers: {
                         'X-Auth-Token': accessToken,
                         'Content-Type': "application/json"
                     }
                 })
                 res.status(200).json(data)
-            } catch (error) {
-                console.error(error)
-                const { message, response } = error;
-                res.status(response?.status || 500).json({ message });
+                break;
             }
-            break;
-        case 'DELETE':
-            const { accessToken, storeHash } = await getSession(req);
-            const { data } =  await axios({
-                method: 'DELETE',
-                url: `https://api.bigcommerce.com/stores/${storeHash}/v3/segments/${segmentId}/shopper-profiles?id:in=${ids}`,
-                headers: {
-                    'X-Auth-Token': accessToken,
-                    'Content-Type': "application/json"
-                }
-            })
-            res.status(200).json(data)
-            break;
         default:
             res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
             res.status(405).end(`Method ${method} Not Allowed`);

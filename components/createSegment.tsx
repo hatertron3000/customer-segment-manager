@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { AlertProps, AlertsManager, Box, Button, createAlertsManager, Form, FormGroup, H2, Input, Textarea } from "@bigcommerce/big-design"
 import { AddIcon } from '@bigcommerce/big-design-icons'
-import { Box, AlertsManager, AlertProps, createAlertsManager, H2, Form, FormGroup, Input, Button, Textarea } from "@bigcommerce/big-design"
+import { useState } from "react"
 
 const alertsManager = createAlertsManager()
 

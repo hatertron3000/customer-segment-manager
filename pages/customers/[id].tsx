@@ -1,22 +1,24 @@
-import { useRouter } from 'next/router'
-import { useSegments, useCustomer } from '@lib/hooks'
 import {
-        H2,
-        H3,
-        Panel,
-        Link as StyledLink,
+        AlertProps, 
+        AlertsManager,
         Box,
-        Text,
-        Switch,
+        createAlertsManager,
         Flex,
         FlexItem,
-        AlertsManager, AlertProps, createAlertsManager
+        H2,
+        Panel,
+        Link as StyledLink,
+        Switch,
+        Text,
     } from '@bigcommerce/big-design'
 import { ArrowBackIcon } from '@bigcommerce/big-design-icons'
-import Loading from '@components/loading'
 import Link from 'next/link'
-import { useSession } from 'context/session'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
+import Loading from '@components/loading'
+import { useCustomer, useSegments,  } from '@lib/hooks'
+import { useSession } from 'context/session'
+
 
 const alertsManager = createAlertsManager()
 
@@ -26,17 +28,17 @@ const CustomerEditor = () => {
     const id = router.query.id as string
     const {
         segments,
-        segmentMeta,
-        segmentsLoading,
-        segmentError,
-        mutateSegments,
+        // segmentMeta,
+        // segmentsLoading,
+        // segmentError,
+        // mutateSegments,
     } = useSegments({page: "1", limit: "250"})
 
     const {
         customer,
-        customerMeta,
-        customerLoading,
-        customerError,
+        // customerMeta,
+        // customerLoading,
+        // customerError,
         mutateCustomer,
     } = useCustomer(id)
 
@@ -45,7 +47,6 @@ const CustomerEditor = () => {
     
     
     const addToSegment = async (segmentId) => {
-        console.log('adding')
         try {
             const url = `/api/segments/${segmentId}/shopper-profiles?context=${encodedContext}`
             const options = {
@@ -86,7 +87,6 @@ const CustomerEditor = () => {
     }
 
     const removeFromSegment = async (segmentId) => {
-        console.log('removing')
         try {
             const url = `/api/segments/${segmentId}/shopper-profiles?context=${encodedContext}&ids=${customer.shopper_profile_id}`
             const options = {
@@ -181,7 +181,7 @@ const CustomerEditor = () => {
         </Box>
         <H2>Edit Segments for {customer.email}</H2>
         <Box>
-            {segments.map(segment => (<Flex marginBottom="medium">
+            {segments.map(segment => (<Flex marginBottom="medium" key={segment.id}>
                 <FlexItem>
                     <Switch 
                         disabled={disabled}
